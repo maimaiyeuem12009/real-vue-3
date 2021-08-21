@@ -1,0 +1,77 @@
+
+@font-face {
+  font-family: "Verger";
+  src: url("./css/font/V-GERBbold.woff2") format("woff2");
+  font-weight: 900;
+}
+@font-face {
+  font-family: "Verger";
+  src: url("./css/font/VoyagerGrotesqueregular.woff2") format("woff2");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Verger";
+  src: url("./css/font/Vegerlight.woff2") format("woff2");
+  font-weight: 300;
+}
+@font-face {
+  font-family: " ";
+  src: url("./css/font/HelveticaNeue-UltraLight.otf") ;
+  font-weight: 100;
+}
+@font-face {
+  font-family: "Helvetica";
+  src: url("./css/font/HelveticaNeue-Thin.otf") ;
+  font-weight: 200;
+}
+@font-face {
+  font-family: "Helvetica";
+  src: url("./css/font/HelveticaNeue-Light.otf") ;
+  font-weight: 300;
+}
+@font-face {
+  font-family: "Helvetica";
+  src: url("./css/font/HelveticaNeue-Roman.otf") ;
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Helvetica";
+  src: url("./css/font/HelveticaNeue-Medium.otf") ;
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Helvetica";
+  src: url("./css/font/HelveticaNeue-Bold.otf") ;
+  font-weight: 600;
+}
+@font-face {
+  font-family: "Helvetica";
+  src: url("./css/font/HelveticaNeue-Heavy.otf") ;
+  font-weight: 700;
+}
+@font-face {
+  font-family: "Helvetica";
+  src: url("./css/font/HelveticaNeue-Black.otf") ;
+  font-weight: 800;
+}
+@font-face {
+  font-family: "MoMA";
+  src: url("./css/font/MoMASans-Store-Web.woff2") ;
+  font-weight: 300;
+}
+@font-face {
+  font-family: "MoMA";
+  src: url("./css/font/MoMASans-Regular-Web.woff2") ;
+  font-weight: 400;
+}
+@font-face {
+  font-family: "MoMA";
+  src: url("./css/font/MoMASans-Medium-Web.woff2") ;
+  font-weight: 500;
+}
+
+@mixin tech-font{
+  font-family: Verger;
+  font-weight: 900;
+  text-transform: uppercase;
+}
