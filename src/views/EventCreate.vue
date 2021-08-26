@@ -6,48 +6,55 @@
         label="Select a category"
         :options="categories"
       />
+      <fieldset>
+        <legend>Name and Describe your event</legend>
+        <BaseInput
+            v-model="event.title"
+            label="Title"
+            type="text"
+            error="Wtf"
+        />
 
-      <h3>Name and Describe your event</h3>
-      <BaseInput
-        v-model="event.title"
-        label="Title"
-        type="text"
-      />
+        <BaseInput
+            v-model="event.description"
+            label="Description"
+            type="text"
+        />
 
-      <BaseInput
-          v-model="event.description"
-          label="Description"
-          type="password"
-      />
+        <BaseInput
+            v-model="event.location"
+            label="Location"
+            type="text"
+        />
+      </fieldset>
 
-      <BaseInput
-          v-model="event.location"
-          label="Location"
-          type="text"
-      />
-
-      <h3>Are pet allowed</h3>
-      <BaseRadioGroup
+      <fieldset>
+        <legend>Are pet allowed</legend>
+        <BaseRadioGroup
         v-model="event.pets"
         name="pets"
         :options="petOptions"
         :vertical=false
-      />
+        />
+      </fieldset>
+
+      <fieldset>
+        <legend>Extra</legend>
+        <BaseCheckBox
+            v-model="event.extras.catering"
+            label="Catering"
+        />
+        <BaseCheckBox
+            v-model="event.extras.music"
+            label="Live music"
+        />
+      </fieldset>
 
 
-      <h3>Extra</h3>
-      <BaseCheckBox
-        v-model="event.extras.catering"
-        label="Catering"
-      />
 
-      <BaseCheckBox
-          v-model="event.extras.music"
-          label="Live music"
-      />
       <BaseButton label="Submit" type="submit"/>
     </form>
-    <p>{{event}}</p>
+
   </div>
 </template>
 
@@ -55,7 +62,7 @@
 import BaseInput from "@/components/BaseInput";
 import BaseCheckBox from "@/components/BaseCheckBox";
 import BaseRadioGroup from "@/components/BaseRadioGroup";
-import axios from "axios";
+import {v4 as uuidv4} from 'uuid'
 export default {
   name: "EventCreate]",
   components: {BaseRadioGroup, BaseCheckBox, BaseInput},
@@ -84,12 +91,31 @@ export default {
       petOptions: [
         {label:'Yes', value:1},
         {label:'No', value:0}
-      ]
+      ],
     }
   },
   methods: {
     sendForm() {
-      console.log("etf")
+      const date = new Date(Date.now())
+      const event = {
+        ...this.event,
+        id : uuidv4(),
+        date : date.toDateString(),
+        time : [date.getHours(),date.getMinutes()].join(':')
+      }
+      this.$store.dispatch('createEvent',event)
+      .then(() => {
+        this.$router.push({
+          name: 'EventShow',
+          params: {id: event.id }
+        })
+        .catch(e => {
+          this.$router.push({
+            name: 'ErrorDisplay',
+            params: {error: e }
+          })
+        })
+      })
     }
   }
 };
@@ -104,9 +130,12 @@ export default {
     margin-bottom: 20px;
   }
 
-  h3{
+  legend{
+    font-size: 1.953em;
     margin-top: 10px;
     margin-bottom: 20px;
+    text-align: left;
+    font-weight: 500;
   }
 }
 </style>

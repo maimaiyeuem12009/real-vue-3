@@ -14,7 +14,7 @@ export default {
   props: {
     event: Object
   },
-  name: "EventCard"
+  name: "EventCard",
 };
 </script>
 

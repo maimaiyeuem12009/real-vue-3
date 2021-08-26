@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import EventList from "../views/EventList";
 import EventShow from "../views/EventShow";
 import EventCreate from "../views/EventCreate";
+import ErrorDisplay from "@/views/ErrorDisplay";
 
 const routes = [
   {
@@ -19,6 +20,12 @@ const routes = [
     path: "/create",
     name: "EventCreate",
     component: EventCreate
+  },
+  {
+    path: "/error/:error",
+    name: "ErrorDisplay",
+    component: ErrorDisplay,
+    props: true
   }
 ];
 

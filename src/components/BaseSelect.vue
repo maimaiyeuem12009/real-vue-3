@@ -1,5 +1,5 @@
 <template>
-  <label>Select a category</label>
+  <label :for="uuid">Select a category</label>
   <div class="option-box">
     <select
         :value="modelValue"
@@ -7,6 +7,7 @@
         ...$attrs,
         onChange: ($event) => {$emit('update:modelValue', $event.target.value)}
       }"
+        :id="uuid"
     >
     <option
         v-for="(option,index) in options"
@@ -19,6 +20,7 @@
 </template>
 
 <script>
+import UniqueID from "@/features/UniqueID";
 export default {
   name: "BaseSelect",
   props:{
@@ -34,6 +36,12 @@ export default {
       type: [String, Number],
       default: ""
     }
+  },
+  setup () {
+    const uuid = UniqueID().getID()
+    return {
+      uuid
+    }
   }
 }
 </script>
@@ -46,7 +54,7 @@ label {
 }
 .option-box{
   position: relative;
-
+  margin-bottom: 20px;
 
   select {
     height: 50px;

@@ -5,6 +5,7 @@
     <router-link class="link" :to="{ name: 'EventShow',  params:{ id: 123 } }">Show</router-link>
   </div>
   <router-view />
+
 </template>
 
 <style lang="scss">
@@ -60,6 +61,11 @@ p{
 }
 h6{
   font-size: 0.8em;
+}
+.error-message{
+  font-size: 1.25em;
+  color: red;
+  margin: 10px 0 10px;
 }
 
 </style>

@@ -1,16 +1,18 @@
 <template>
-  <div class="check-box">
+  <div class="check-box" :for="uuid">
     <input
         type="checkbox"
         :checked="modelValue"
         @change="$emit('update:modelValue', $event.target.checked)"
         class="field"
+        :id="uuid"
     >
     <label v-if="label">{{label}}</label>
   </div>
 </template>
 
 <script>
+import UniqueID from "@/features/UniqueID";
 export default {
   name: "BaseCheckBox",
   props: {
@@ -21,6 +23,12 @@ export default {
     modelValue:{
       type: Boolean,
       default: false
+    }
+  },
+  setup () {
+    const uuid = UniqueID().getID()
+    return {
+      uuid
     }
   }
 }

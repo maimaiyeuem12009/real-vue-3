@@ -7,22 +7,24 @@
 </template>
 
 <script>
-import EvenService from "@/service/EvenService";
+
 
 export default {
   props: ["id"],
   name: "EventShow",
-  data() {
-    return{
-      event: null
+  computed: {
+    event() {
+      return this.$store.state.event
     }
   },
   created() {
-    EvenService.getEvent(this.id).then(response => {
-      this.event = response.data
-    }).catch(e => {
-      console.log(e)
-    })
+    this.$store.dispatch('fetchEvent',this.id)
+        .catch(e => {
+          this.$router.push({
+            name: 'ErrorDisplay',
+            params: {error: e }
+          })
+        })
   }
 };
 </script>

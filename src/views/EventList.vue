@@ -12,21 +12,22 @@
 
 <script>
 import EventCard from "../components/EventCard"
-import EvenService from "@/service/EvenService";
 export default {
   name: "EventList",
   components: { EventCard },
-  data() {
-    return {
-      events: null
+  computed: {
+    events() {
+      return this.$store.state.events
     }
   },
   created() {
-    EvenService.getEvents().then(response => {
-      this.events = response.data
-    }).catch(e => {
-      console.log(e)
-    })
+    this.$store.dispatch('fetchEvents')
+        .catch(e => {
+          this.$router.push({
+            name: 'ErrorDisplay',
+            params: {error: e }
+          })
+        })
   }
 }
 </script>
