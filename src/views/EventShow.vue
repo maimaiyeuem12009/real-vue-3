@@ -1,7 +1,8 @@
 <template>
   <div v-if="event" class="event-show">
-    <h1 class="event-title">Ngu Lắm Giang ạ</h1>
-
+    <h1 class="event-title">{{ event.title }}</h1>
+    <p class="event-dare">{{ event.time }} on {{ event.date }} @ {{ event.location }}</p>
+    <p class="event-description">{{ event.description }}</p>
   </div>
 </template>
 
