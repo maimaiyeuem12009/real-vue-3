@@ -5,38 +5,44 @@ export default createStore({
   state: {
     user: 'Nam Nguyen',
     events: [],
-    event: {}
+    event: {},
+    totalEvent: 0
   },
   mutations: {
     ADD_EVENT(state, event){
       state.events.push(event)
     },
-    ADD_EVENTS(state, events) {
-      state.events = events
-    },
     SET_EVENT(state, event) {
       state.event = event
+    },
+    SET_EVENTS(state, events) {
+      state.events = events
+    },
+    SET_TOTAL(state, total){
+      state.totalEvent = total
     }
+
   },
   actions: {
     createEvent({ commit }, event) {
-      EvenService.postEvent(event).then(() => {
+      return EvenService.postEvent(event).then(() => {
         commit('ADD_EVENT',event)
       }).catch(e => {
         throw(e)
       })
     },
-    fetchEvents({ commit }) {
-      return EvenService.getEvents().then((response) => {
-        commit('ADD_EVENTS',response.data)
+    fetchEvents({ commit }, content) {
+      return EvenService.getEvents(content.perPage, content.page).then((response) => {
+        commit('SET_EVENTS',response.data)
+        commit('SET_TOTAL', response.headers['x-total-count'])
       }).catch(e => {
         throw(e)
       })
     },
     fetchEvent( {commit,state}, id) {
-      const existingEvent = state.events.find(event => event.id === id)
+      const existingEvent = state.events.find((event) => String(event.id) === id)
       if (existingEvent){
-        return existingEvent
+        commit('SET_EVENT', existingEvent)
       }else {
         return EvenService.getEvent(id).then(response => {
           commit('SET_EVENT', response.data)

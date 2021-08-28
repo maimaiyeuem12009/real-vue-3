@@ -4,8 +4,10 @@
 </template>
 
 <script>
+import BaseButton from "@/components/BaseButton";
 export default {
   name: "ErrorDisplay",
+  components: {BaseButton},
   props: {
     error: {
       type: String,

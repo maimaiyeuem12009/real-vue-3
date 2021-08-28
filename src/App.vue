@@ -1,13 +1,17 @@
 <template>
-  <div id="nav">
+  <div id="flashMessage" v-if="GStore.flashMessage">{{GStore.flashMessage}}</div>
+  <div class="nav nav-main">
     <router-link class="link" :to="{ name: 'EventList' }">List</router-link> |
-    <router-link class="link" :to="{ name: 'EventCreate' }">Create</router-link> |
-    <router-link class="link" :to="{ name: 'EventShow',  params:{ id: 123 } }">Show</router-link>
+    <router-link class="link" :to="{ name: 'EventCreate' }">Create</router-link>
   </div>
   <router-view />
 
 </template>
-
+<script>
+export default {
+  inject: ['GStore']
+}
+</script>
 <style lang="scss">
 @import "css/main";
 #app {
@@ -21,22 +25,24 @@
   padding: 010px;
   @include test-box;
 }
-#nav{
+.nav-main{
   font-size: 1.953em;
+  padding: 30px;
+  a{
+    font-weight: bold;
+  }
+}
+
+.nav {
 
   .link {
     font-weight: 400;
   }
-}
-#nav {
-  padding: 30px;
-
   a {
-    font-weight: bold;
-    color: #2c3e50;
+    color: #999;
 
     &.router-link-exact-active {
-      color: #42b983;
+      color: #101010;
     }
   }
 }
@@ -67,5 +73,20 @@ h6{
   color: red;
   margin: 10px 0 10px;
 }
-
+@keyframes  yellowfade {
+  from {
+    background: yellow;
+  }
+  to{
+    background: transparent;
+  }
+}
+#flashMessage {
+  -webkit-animation-name: yellowfade;
+  -moz-animation-name: yellowfade;
+  -o-animation-name: yellowfade;
+  animation-name: yellowfade;
+  animation-duration: 4s;
+  font-size:1.25em;
+}
 </style>
