@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1>List Event {{page}}</h1>
+    <h1>List Event for {{user.userInfo.name}}</h1>
     <div class="event-wrapper">
-      <EventCard v-for="event in events"
+      <EventCard v-for="event in event.events"
                  :event="event"
                  :key="event.id"/>
     </div>
@@ -27,6 +27,7 @@
 
 <script>
 import EventCard from "../components/EventCard"
+import { mapState,mapActions } from 'vuex'
 
 export default {
   name: "EventList",
@@ -38,9 +39,7 @@ export default {
     }
   },
   computed: {
-    events() {
-      return this.$store.state.events
-    },
+    ...mapState(['event','user']),
     totalEvent() {
       return this.$store.state.totalEvent
     },
@@ -49,8 +48,11 @@ export default {
       return totalPage > this.page
     }
   },
+  methods: {
+    ...mapActions('event',['fetchEvents'])
+  },
   beforeMount() {
-    this.$store.dispatch('fetchEvents', {perPage: this.perPage , page: this.page})
+    this.fetchEvents({perPage: this.perPage , page: this.page})
         .catch(e => {
           this.$router.push({
             name: 'ErrorDisplay',
@@ -59,7 +61,7 @@ export default {
         })
   },
   beforeRouteUpdate() {
-    return this.$store.dispatch('fetchEvents', {perPage: this.perPage , page: this.page})
+    return this.fetchEvents({perPage: this.perPage , page: this.page})
         .catch(e => {
           return({
             name: 'ErrorDisplay',

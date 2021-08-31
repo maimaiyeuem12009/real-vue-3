@@ -63,6 +63,8 @@ import BaseInput from "@/components/BaseInput";
 import BaseCheckBox from "@/components/BaseCheckBox";
 import BaseRadioGroup from "@/components/BaseRadioGroup";
 import {v4 as uuidv4} from 'uuid'
+import { mapState, mapActions } from 'vuex'
+
 export default {
   name: "EventCreate]",
   components: {BaseRadioGroup, BaseCheckBox, BaseInput},
@@ -94,16 +96,21 @@ export default {
       ],
     }
   },
+  computed: {
+    ...mapState(['user'])
+  },
   methods: {
+    ...mapActions('event',['createEvent']),
     sendForm() {
       const date = new Date(Date.now())
       const event = {
         ...this.event,
         id : uuidv4(),
+        organizer: this.user.userInfo.name,
         date : date.toDateString(),
         time : [date.getHours(),date.getMinutes()].join(':')
       }
-      this.$store.dispatch('createEvent',event)
+      this.createEvent(event)
       .then(() => {
         this.$router.push({
           name: 'EventShow',
