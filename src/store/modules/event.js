@@ -33,6 +33,7 @@ export default {
         fetchEvents({ commit }, content) {
             return EvenService.getEvents(content.perPage, content.page).then((response) => {
                 commit('SET_EVENTS',response.data)
+                console.log('SET_TOTAL', response.headers['x-total-count'])
                 commit('SET_TOTAL', response.headers['x-total-count'])
             }).catch(e => {
                 throw(e)

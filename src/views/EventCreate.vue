@@ -2,17 +2,17 @@
   <div class="event-create">
     <h1>Create an Event</h1>
     <form @submit.prevent="sendForm()">
-      <BaseSelect v-model="event.category"
+      <BaseSelect v-model="this.category"
         label="Select a category"
         :options="categories"
       />
       <fieldset>
         <legend>Name and Describe your event</legend>
         <BaseInput
-            v-model="event.title"
+            v-model="title"
             label="Title"
             type="text"
-            error="Wtf"
+            :error="error"
         />
 
         <BaseInput
@@ -54,7 +54,7 @@
 
       <BaseButton label="Submit" type="submit"/>
     </form>
-
+    {{title}}
   </div>
 </template>
 
@@ -64,9 +64,19 @@ import BaseCheckBox from "@/components/BaseCheckBox";
 import BaseRadioGroup from "@/components/BaseRadioGroup";
 import {v4 as uuidv4} from 'uuid'
 import { mapState, mapActions } from 'vuex'
+import {useField} from 'vee-validate'
+/* eslint-disable */
 
 export default {
   name: "EventCreate]",
+  setup() {
+    const event_title = useField('title', function(value) {
+      if (!value) return 'This field is required'
+      return true
+    })
+    console.log(event_title)
+    return {title:event_title.value, error: event_title.errorMessage}
+  },
   components: {BaseRadioGroup, BaseCheckBox, BaseInput},
   data () {
     return {
@@ -106,6 +116,7 @@ export default {
       const event = {
         ...this.event,
         id : uuidv4(),
+        title: this.title,
         organizer: this.user.userInfo.name,
         date : date.toDateString(),
         time : [date.getHours(),date.getMinutes()].join(':')

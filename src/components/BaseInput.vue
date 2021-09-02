@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import UniqueID from "@/features/UniqueID";
+import { v1 as uuidv1 } from 'uuid'
 export default {
   name: "BaseInput",
   props: {
@@ -40,7 +40,7 @@ export default {
     }
   },
   setup () {
-    const uuid = UniqueID().getID()
+    const uuid = uuidv1()
     return {
       uuid
     }

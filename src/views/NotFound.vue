@@ -7,6 +7,7 @@
 
 <script>
 import BaseButton from "@/components/BaseButton";
+import { useRouter } from 'vue-router'
 export default {
   name: "NotFound",
   props: {
@@ -16,15 +17,17 @@ export default {
     }
   },
   components: {BaseButton},
-  methods: {
-    goBack() {
-      if (this.page === 'page'){
-        this.$router.go(-1)
+  setup(props) {
+    const router =useRouter()
+    function goBack() {
+      if (props.resource === 'page'){
+        router.go(-1)
       } else {
-        this.$router.go(-2)
+        router.go(-2)
       }
     }
-  }
+    return  {goBack}
+  },
 }
 </script>
 

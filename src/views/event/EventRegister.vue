@@ -1,13 +1,13 @@
 <template>
   <p class="event-description">Event Register</p>
-  <BaseButton label="Register Me" @click="register"/>
+  <BaseButton @click="register">
+    Register Me
+  </BaseButton>
 </template>
 
 <script>
-import BaseButton from "@/components/BaseButton";
 export default {
   name: "EventRegister",
-  components: {BaseButton},
   inject: ['GStore'],
   props: ["event"],
   methods: {

@@ -8,6 +8,7 @@ import EventEdit from "@/views/event/EventEdit";
 import EventLayout from "@/views/event/EventLayout";
 import NotFound from "@/views/NotFound";
 import NProgress from "nprogress"
+import Composition from "@/views/Composition";
 
 const routes = [
   {
@@ -53,6 +54,11 @@ const routes = [
   {
     path: "/create",
     redirect: {name: EventCreate}
+  },
+  {
+    path: "/composition",
+    name: "Composition",
+    component: Composition,
   },
   {
     path: "/error/:error",

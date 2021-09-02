@@ -27,47 +27,44 @@
 
 <script>
 import EventCard from "../components/EventCard"
-import { mapState,mapActions } from 'vuex'
+import {computed, ref, onBeforeMount} from 'vue'
+import { onBeforeRouteUpdate} from 'vue-router'
+import { useStore } from 'vuex'
 
 export default {
   name: "EventList",
   props: ['page'],
   components: { EventCard },
-  data() {
-    return {
-    perPage: 2
-    }
-  },
-  computed: {
-    ...mapState(['event','user']),
-    totalEvent() {
-      return this.$store.state.totalEvent
-    },
-    hasNextPage(){
-      let totalPage = Math.ceil(this.totalEvent/ this.perPage)
-      return totalPage > this.page
-    }
-  },
-  methods: {
-    ...mapActions('event',['fetchEvents'])
-  },
-  beforeMount() {
-    this.fetchEvents({perPage: this.perPage , page: this.page})
-        .catch(e => {
+  setup(props) {
+    const perPage = ref(2)
+    const store = useStore()
+    let [event, user] = ['event', 'user'].map( name => computed(() => store.state[name]))
+    let hasNextPage = computed(() => {
+      let totalPage = Math.ceil(event.value.totalEvent/ perPage.value)
+      return totalPage > props.page
+    })
+    const fetchEvents = (payload) => store.dispatch('event/fetchEvents',payload)
+    const mountOrUpdates = (payload, mount = true) => {
+      fetchEvents(payload)
+      .catch(e => {
+        if (mount) {
           this.$router.push({
             name: 'ErrorDisplay',
             params: {error: e }
           })
-        })
-  },
-  beforeRouteUpdate() {
-    return this.fetchEvents({perPage: this.perPage , page: this.page})
-        .catch(e => {
+        } else {
           return({
             name: 'ErrorDisplay',
             params: {error: e }
           })
-        })
+        }
+      })
+    }
+    onBeforeMount( () => mountOrUpdates({perPage: perPage.value,page: props.page}))
+    onBeforeRouteUpdate( () => mountOrUpdates({perPage: perPage.value,page: props.page},false))
+    return {
+      perPage, event, user,hasNextPage
+    }
   }
 }
 </script>

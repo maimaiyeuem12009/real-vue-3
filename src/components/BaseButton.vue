@@ -3,19 +3,13 @@
     class="base-button"
     v-bind="$attrs"
   >
-    {{label}}
+    <slot>Submit</slot>
   </button>
 </template>
 
 <script>
 export default {
   name: "BaseButton",
-  props: {
-    label: {
-      type: String,
-      default: 'Button'
-    }
-  }
 }
 </script>
 
