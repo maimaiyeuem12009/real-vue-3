@@ -16,6 +16,14 @@
         :selected="option === modelValue"
     >{{option}}</option>
     </select>
+    <p
+        v-if="error"
+        class="error-message"
+        :id="`${uuid}-error`"
+        aria-live="assertive"
+    >
+      {{error}}
+    </p>
   </div>
 </template>
 
@@ -35,6 +43,10 @@ export default {
     modelValue: {
       type: [String, Number],
       default: ""
+    },
+    error: {
+      type: String,
+      default: ''
     }
   },
   setup () {

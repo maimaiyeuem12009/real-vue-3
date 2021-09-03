@@ -6,22 +6,24 @@
 </template>
 
 <script>
+import { inject } from 'vue'
+import { useRouter } from 'vue-router'
+
 export default {
   name: "EventRegister",
-  inject: ['GStore'],
   props: ["event"],
-  methods: {
-    register(){
-      this.GStore.flashMessage = 'You are successfully register for ' + this.event.title
+  setup(props) {
+    let GStore = inject('GStore')
+    const router = useRouter()
+    const register = () => {
+      GStore.flashMessage = 'You are successfully register for ' + props.event.title
       setTimeout(() => {
-        this.GStore.flashMessage = ''
+        GStore.flashMessage = ''
       }, 3000)
-      this.$router.push({
-        name: 'EventShow',
-        params: { id: this.event.id}
-      })
+      router.push({name: 'EventShow', params: { id: props.event.id}})
     }
-  }
+    return {register}
+  },
 }
 </script>
 

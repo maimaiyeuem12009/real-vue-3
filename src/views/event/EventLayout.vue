@@ -12,24 +12,25 @@
 </template>
 
 <script>
-import { mapState,mapActions } from 'vuex'
+import { useStore } from 'vuex'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 export default {
   props: ["id"],
   name: "Layout",
-  computed: {
-    ...mapState(['event'])
-  },
-  methods: {
-    ...mapActions('event',['fetchEvent'])
-  },
-  created() {
-    this.fetchEvent(this.id)
+  setup(props) {
+    const store = useStore()
+    const router = useRouter()
+    const event = computed (() =>store.state.event)
+    const fetchEvent = (payload) => store.dispatch('event/fetchEvent',payload)
+    fetchEvent(props.id)
         .catch( () => {
-          this.$router.push({
+          router.push({
             name: '404Resource',
             params: { resource: 'Event' }
           })
         })
+    return {event: event.value}
   }
 }
 </script>

@@ -1,5 +1,4 @@
 <template>
-
   <p class="event-description">{{ event.description }}</p>
 </template>
 

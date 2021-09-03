@@ -9,7 +9,7 @@
       :value="option.value"
       :name="name"
       :modelValue="modelValue"
-      @update:modelValue="$emit('update:modelValue',$event)"
+      @update:modelValue=";$emit('update:modelValue',$event)"
     />
   </div>
 </template>
@@ -36,7 +36,7 @@ export default {
       type: Boolean,
       default: false
     }
-  } 
+  },
 }
 </script>
 

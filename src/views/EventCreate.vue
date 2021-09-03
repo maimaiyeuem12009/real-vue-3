@@ -2,9 +2,10 @@
   <div class="event-create">
     <h1>Create an Event</h1>
     <form @submit.prevent="sendForm()">
-      <BaseSelect v-model="this.category"
+      <BaseSelect v-model="category"
         label="Select a category"
         :options="categories"
+        :error="categoryError"
       />
       <fieldset>
         <legend>Name and Describe your event</legend>
@@ -12,26 +13,28 @@
             v-model="title"
             label="Title"
             type="text"
-            :error="error"
+            :error="titleError"
         />
 
         <BaseInput
-            v-model="event.description"
+            v-model="description"
             label="Description"
             type="text"
+            :error="descriptionError"
         />
 
         <BaseInput
-            v-model="event.location"
+            v-model="location"
             label="Location"
             type="text"
+            :error="locationError"
         />
       </fieldset>
 
       <fieldset>
         <legend>Are pet allowed</legend>
         <BaseRadioGroup
-        v-model="event.pets"
+        v-model="pets"
         name="pets"
         :options="petOptions"
         :vertical=false
@@ -41,11 +44,11 @@
       <fieldset>
         <legend>Extra</legend>
         <BaseCheckBox
-            v-model="event.extras.catering"
+            v-model="catering"
             label="Catering"
         />
         <BaseCheckBox
-            v-model="event.extras.music"
+            v-model="music"
             label="Live music"
         />
       </fieldset>
@@ -54,88 +57,94 @@
 
       <BaseButton label="Submit" type="submit"/>
     </form>
-    {{title}}
+    title: {{title}}<br/>
+    pets: {{pets}}<br/>
+    catering: {{catering}}<br/>
+    music: {{music}}<br/>
   </div>
 </template>
 
 <script>
-import BaseInput from "@/components/BaseInput";
-import BaseCheckBox from "@/components/BaseCheckBox";
-import BaseRadioGroup from "@/components/BaseRadioGroup";
 import {v4 as uuidv4} from 'uuid'
-import { mapState, mapActions } from 'vuex'
-import {useField} from 'vee-validate'
-/* eslint-disable */
+import {useField, useForm } from 'vee-validate'
+import {computed, ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+
 
 export default {
-  name: "EventCreate]",
+  name: "EventCreate",
   setup() {
-    const event_title = useField('title', function(value) {
-      if (!value) return 'This field is required'
-      return true
-    })
-    console.log(event_title)
-    return {title:event_title.value, error: event_title.errorMessage}
-  },
-  components: {BaseRadioGroup, BaseCheckBox, BaseInput},
-  data () {
-    return {
-      categories: [
-        'sustainability',
-        'nature',
-        'animal welfare',
-        'housing',
-        'education',
-        'food',
-        'community'
-      ],
-      event: {
-        category: '',
-        title: '',
-        description: '',
-        location: '',
-        pets: 1,
-        extras: {
-          catering: false,
-          music: false
-        }
+    const categories = ref(['sustainability', 'nature', 'animal welfare', 'housing', 'education', 'food', 'community'])
+    const petOptions= ref([{label:'Yes', value:1},  {label:'No', value:0}])
+    let [catering,music,pets] = [false,false,1].map((a) => ref(a))
+
+    const router = useRouter()
+    const store = useStore()
+    const user = computed (() => store.state.user)
+    const createEvent = (payload) => store.dispatch('event/createEvent',payload)
+
+    const validations = {
+      category: value => {
+        if (value !== 'housing') return 'This field is required'
+        return true
       },
-      petOptions: [
-        {label:'Yes', value:1},
-        {label:'No', value:0}
-      ],
+      title: value => {
+        if (!value) return 'This field is required'
+        return true
+      },
+      description: value => {
+        if (!value) return 'This field is required'
+        return true
+      },
+      location: value => {
+        if (!value) return 'This field is required'
+        return true
+      },
     }
-  },
-  computed: {
-    ...mapState(['user'])
-  },
-  methods: {
-    ...mapActions('event',['createEvent']),
-    sendForm() {
+    useForm({validationSchema: validations})
+
+    const {value: category, errorMessage: categoryError} = useField('category')
+    const {value: title, errorMessage: titleError} = useField('title')
+    const {value: description, errorMessage: descriptionError} = useField('description')
+    const {value: location, errorMessage: locationError} = useField('location')
+
+    const sendForm = () => {
       const date = new Date(Date.now())
       const event = {
-        ...this.event,
+        category: category.value,
+        title: title.value,
+        description: description.value,
+        location: location.value,
+        pets:pets.value,
         id : uuidv4(),
-        title: this.title,
-        organizer: this.user.userInfo.name,
+        extras: {
+          catering: catering.value,
+          music: music.value
+        },
+        organizer: user.value.userInfo.name,
         date : date.toDateString(),
         time : [date.getHours(),date.getMinutes()].join(':')
       }
-      this.createEvent(event)
-      .then(() => {
-        this.$router.push({
-          name: 'EventShow',
-          params: {id: event.id }
-        })
-        .catch(e => {
-          this.$router.push({
-            name: 'ErrorDisplay',
-            params: {error: e }
-          })
-        })
-      })
+      createEvent(event)
+          .then(() => {router.push({ name: 'EventShow', params: {id: event.id }})})
+          .catch(e => {router.push({ name: 'ErrorDisplay', params: {error: e }})})
     }
-  }
+
+    return {
+      title,titleError,
+      category,categoryError,
+      description,descriptionError,
+      location,locationError,
+      categories: categories.value,
+      petOptions: petOptions.value,
+      user: user.value,
+      pets: pets.value,
+      catering: catering.value,
+      music: music.value,
+      sendForm
+    }
+  },
 };
 </script>
 
