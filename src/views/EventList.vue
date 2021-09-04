@@ -2,9 +2,13 @@
   <div>
     <h1>List Event for {{user.userInfo.name}}</h1>
     <div class="event-wrapper">
-      <EventCard v-for="event in event.events"
-                 :event="event"
-                 :key="event.id"/>
+
+      <router-link
+          v-for="event in event.events"
+          :key="event.id"
+          :to="{ name: 'EventShow',  params:{ id: event.id } }">
+      <EventCard :event="event"/>
+      </router-link>
     </div>
     <router-link class="page-link"
         :to="{ name: 'EventList', query: { page: page -1 } }"
@@ -72,6 +76,7 @@ export default {
 <style scoped>
 h1{
   margin-bottom: 20px;
+  color: blue;
 }
 .page-link{
   padding: 0 10px;
